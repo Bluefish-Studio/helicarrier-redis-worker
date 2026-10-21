@@ -63,7 +63,7 @@ With `redis-server` installed locally, `npm test` starts and cleans up its own i
 TEST_REDIS_URL=redis://127.0.0.1:15379 npm test
 ```
 
-The integration check uses a unique queue prefix and deletes only that test queue. It checks completion, exact retry counts, repeat seed, worker restart, HTTP readiness, read-only methods, hidden files, and a sanitized unavailable-queue response. Never point it at a shared or production Redis.
+The integration check uses a unique queue prefix and deletes only that test queue. It temporarily changes the isolated Redis memory policy to verify startup refusal, then restores `noeviction`. It checks completion, exact retry counts, repeat seed, worker restart, HTTP readiness, read-only methods, hidden files, and a sanitized unavailable-queue response. Never point it at a shared or production Redis.
 
 ## Cleanup
 

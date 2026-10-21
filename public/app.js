@@ -5,6 +5,7 @@ async function refresh() {
     const response = await fetch('/api/jobs', { signal: AbortSignal.timeout(5000) });
     if (!response.ok) throw new Error('Unavailable');
     const data = await response.json();
+    document.querySelector('#help').textContent = 'The release command creates the jobs. The worker processes them independently of this page.';
     rows.replaceChildren();
     for (const job of data.jobs) {
       const row = document.createElement('tr');

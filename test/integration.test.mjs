@@ -51,6 +51,14 @@ test('jobs retry, survive worker restart, seed idempotently, and expose only rea
   });
   await verifyRedis(client);
   await verifyRedis(workerClient);
+  const wrongPolicyClient = connection();
+  try {
+    await client.config('SET', 'maxmemory-policy', 'allkeys-lru');
+    await assert.rejects(verifyRedis(wrongPolicyClient), /requires maxmemory-policy=noeviction/);
+  } finally {
+    wrongPolicyClient.disconnect();
+    await client.config('SET', 'maxmemory-policy', 'noeviction');
+  }
   queue = makeQueue(client);
   await seed(queue); await seed(queue);
   assert.equal(await queue.count(), 3, 'Reseeding does not add duplicate job IDs');
