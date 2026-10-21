@@ -2,7 +2,7 @@
 
 A Node.js/BullMQ worker processes three fictional reports. A separate, read-only HTTP service displays each job's state and attempt count. One report deliberately fails once, backs off, and succeeds on its second attempt. The sample processor makes no external calls and has no financial, email, or other irreversible effects.
 
-This example is under verification for a Helicarrier screenshot guide. Do not describe the Helicarrier deployment as tested until its live verification record is complete. The standalone example repository remains private pending publication approval.
+Verified on Helicarrier on 21 October 2026 at source commit `27041dd1f8600b67d6ee6c227704cb1b63834237`: the three reports completed with attempt counts 1, 2, and 1. The same results remained after both application services redeployed and the release command ran again. The demo services were removed afterward. Redis restart/data-loss recovery was not tested. The standalone repository remains private pending publication approval.
 
 ## Run locally
 
@@ -26,7 +26,7 @@ Open `http://localhost:3000`. Expect three completed jobs with attempt counts **
 
 The local Redis is bound only to `127.0.0.1:15379`. It has no authentication or persistence and is for disposable local work only. Never expose it publicly or use these settings for valuable data. `.env` is ignored by Git and Docker; do not include connection URLs in screenshots, logs, or repository files.
 
-## Helicarrier settings to verify
+## Verified Helicarrier settings
 
 Push the source to your GitHub repository first and create three services in the same disposable project/environment:
 
