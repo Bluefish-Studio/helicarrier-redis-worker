@@ -2,7 +2,7 @@
 
 A Node.js/BullMQ worker processes three fictional reports. A separate, read-only HTTP service displays each job's state and attempt count. One report deliberately fails once, backs off, and succeeds on its second attempt. The sample processor makes no external calls and has no financial, email, or other irreversible effects.
 
-Verified on Helicarrier on 21 October 2026 at source commit `27041dd1f8600b67d6ee6c227704cb1b63834237`: the three reports completed with attempt counts 1, 2, and 1. The same results remained after both application services redeployed and the release command ran again. The demo services were removed afterward. Redis restart/data-loss recovery was not tested. The standalone repository remains private pending publication approval.
+Verified on Helicarrier on 21 October 2026 at source commit `27041dd1f8600b67d6ee6c227704cb1b63834237`: the three reports completed with attempt counts 1, 2, and 1. The same results remained after both application services redeployed and the release command ran again. The demo services were removed afterward. Redis restart/data-loss recovery was not tested.
 
 ## Run locally
 
@@ -36,7 +36,7 @@ Push the source to your GitHub repository first and create three services in the
 | `tutorial-report-worker` | Worker | GitHub source; included Dockerfile; Heli S1; `SERVICE_ROLE=worker`; private Redis URL reference named `REDIS_URL` |
 | `tutorial-queue-board` | Web | Same GitHub source/Dockerfile; Heli S1; port `3000`; `SERVICE_ROLE=web`; private Redis URL reference named `REDIS_URL`; release command `npm run seed` |
 
-Use a standalone repository's root, or `examples/node-redis-worker` as the root directory in the platform monorepo. Leave install/build/start overrides blank. The image runs as the non-root `node` user and needs no writable application files; retain the read-only filesystem setting. The worker is a Worker service, has no public URL, and opens no HTTP port. The Dockerfile's `EXPOSE` metadata is only relevant to the Web service.
+Use this repository's root; leave the root directory and install/build/start overrides blank. The image runs as the non-root `node` user and needs no writable application files; retain the read-only filesystem setting. The worker is a Worker service, has no public URL, and opens no HTTP port. The Dockerfile's `EXPOSE` metadata is only relevant to the Web service.
 
 Create/configure Redis and the references before the final app deployments. An initial deployment without `REDIS_URL` intentionally fails with a sanitized setup message. Do not interpret a successful image build as a working service.
 
