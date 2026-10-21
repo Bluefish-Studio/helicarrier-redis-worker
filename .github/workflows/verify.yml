@@ -1,0 +1,56 @@
+name: Verify Redis worker tutorial
+
+on:
+  push:
+    branches: [main]
+  pull_request: {}
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  redis-worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    services:
+      redis:
+        image: redis:8-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 2s
+          --health-timeout 2s
+          --health-retries 20
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - name: Verify real Redis queue behavior
+        env:
+          TEST_REDIS_URL: redis://127.0.0.1:6379
+        run: npm test
+      - name: Build without credentials
+        run: docker build --tag helicarrier-queue:test .
+      - name: Verify read-only containers and release command
+        env:
+          REDIS_URL: redis://127.0.0.1:6379
+          QUEUE_PREFIX: container-guide
+        run: |
+          docker run --rm --network host --env REDIS_URL --env QUEUE_PREFIX helicarrier-queue:test npm run seed
+          docker run --detach --name guide-worker --network host --read-only --tmpfs /tmp --tmpfs /run --env REDIS_URL --env QUEUE_PREFIX --env SERVICE_ROLE=worker helicarrier-queue:test
+          docker run --detach --name guide-board --network host --read-only --tmpfs /tmp --tmpfs /run --env REDIS_URL --env QUEUE_PREFIX helicarrier-queue:test
+          node test/smoke.mjs
+          docker stop --time 20 guide-worker guide-board
+          test "$(docker inspect --format '{{.State.ExitCode}}' guide-worker)" = 0
+          test "$(docker inspect --format '{{.State.ExitCode}}' guide-board)" = 0
+      - name: Remove disposable containers
+        if: always()
+        run: docker rm --force guide-worker guide-board 2>/dev/null || true

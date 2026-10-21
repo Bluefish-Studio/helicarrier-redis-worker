@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Queue lab — Helicarrier tutorial</title>
+  <link rel="stylesheet" href="/style.css"><script defer src="/app.js"></script>
+</head>
+<body>
+  <header><span class="brand">Helicarrier <span>/ Queue lab</span></span><span class="badge">Tutorial example</span></header>
+  <main>
+    <div class="eyebrow">NODE.JS + REDIS + BULLMQ</div>
+    <h1>Work in the background.<br><span>See the result.</span></h1>
+    <p class="intro">Three sample reports, processed by a separate worker. One job fails on purpose, then retries. This page only reads the queue.</p>
+    <section class="architecture" aria-label="How the example works"><div><b>01</b><strong>Release command</strong><small>Seeds three fixed job IDs</small></div><span aria-hidden="true">→</span><div><b>02</b><strong>Private Redis</strong><small>Stores jobs and their state</small></div><span aria-hidden="true">→</span><div><b>03</b><strong>Background worker</strong><small>Processes and retries</small></div></section>
+    <section class="results" aria-labelledby="results-title">
+      <div class="section-head"><h2 id="results-title">Report queue</h2><span id="status" role="status">Connecting…</span></div>
+      <div class="table-scroll"><table><thead><tr><th scope="col">Report</th><th scope="col">State</th><th scope="col">Attempts</th><th scope="col">Units</th></tr></thead><tbody id="jobs"><tr><td colspan="4">Waiting for the queue…</td></tr></tbody></table></div>
+      <p id="help" class="hint">The release command creates the jobs. The worker processes them independently of this page.</p>
+    </section>
+    <div class="notes"><article><h3>Retries are visible.</h3><p>“Retry demonstration” deliberately fails its first attempt. The worker tries again after a backoff, and the attempts column records the result.</p></article><article><h3>Small and read-only.</h3><p>No public enqueue endpoint. No customer data. Sample report processing is deterministic and makes no external requests.</p></article></div>
+  </main>
+  <footer>Built for the Helicarrier Redis worker guide. Disposable demo — not a production queue dashboard.</footer>
+</body>
+</html>

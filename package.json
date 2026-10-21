@@ -1,0 +1,13 @@
+{
+  "name": "helicarrier-redis-worker-example",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/main.mjs",
+    "seed": "node scripts/seed.mjs",
+    "test": "node --test test/integration.test.mjs"
+  },
+  "dependencies": { "bullmq": "6.3.19", "ioredis": "6.0.0" }
+}
